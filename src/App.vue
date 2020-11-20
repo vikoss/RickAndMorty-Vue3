@@ -1,10 +1,40 @@
 <template>
   <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+    <router-link to="/locations">Locations</router-link> |
+    <router-link to="/characters">Characters</router-link> |
+    <router-link to="/episodes">Episodes</router-link>
   </div>
   <router-view/>
+  <nav>
+    <router-link :to="prevPage">Prev</router-link>
+    <router-link :to="nextPage">Next</router-link>
+  </nav>
 </template>
+
+<script setup>
+const { ref, provide, computed } = require('vue')
+const { useRoute } = require('vue-router')
+
+export const info = ref({
+  count: 0,
+  pages: 0,
+  next: 0,
+  prev: 0,
+})
+provide('info', info)
+
+export const route = useRoute()
+
+export const prevPage = computed(() => ({
+  name: route.name,
+  params: { page: info.value.prev || route.params.page },
+}))
+
+export const nextPage = computed(() => ({
+  name: route.name,
+  params: { page: info.value.next || route.params.page },
+}))
+</script>
 
 <style>
 #app {
